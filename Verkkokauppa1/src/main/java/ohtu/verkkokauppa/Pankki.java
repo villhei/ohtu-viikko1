@@ -9,6 +9,7 @@ public class Pankki implements PankkiInterface {
 
     private Kirjanpito kirjanpito;
 
+    @Autowired
     public Pankki(Kirjanpito kirjanpito) {
         this.kirjanpito = kirjanpito;
     }

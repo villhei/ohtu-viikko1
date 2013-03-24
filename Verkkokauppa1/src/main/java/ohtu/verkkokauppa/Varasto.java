@@ -2,15 +2,16 @@ package ohtu.verkkokauppa;
 
 import ohtu.interfaces.VarastoInterface;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Varasto implements VarastoInterface {
 
     private Kirjanpito kirjanpito;
-    
     private HashMap<Tuote, Integer> saldot;
 
+    @Autowired
     public Varasto(Kirjanpito kirjanpito) {
         this.kirjanpito = kirjanpito;
         saldot = new HashMap<Tuote, Integer>();
@@ -18,29 +19,31 @@ public class Varasto implements VarastoInterface {
     }
 
     @Override
-        public Tuote haeTuote(int id){
+    public Tuote haeTuote(int id) {
         for (Tuote t : saldot.keySet()) {
-            if ( t.getId()==id) return t;
+            if (t.getId() == id) {
+                return t;
+            }
         }
 
         return null;
     }
 
     @Override
-        public int saldo(int id){
+    public int saldo(int id) {
         return saldot.get(haeTuote(id));
     }
 
     @Override
-        public void otaVarastosta(Tuote t){
-        saldot.put(t,  saldo(t.getId())-1 );
-        kirjanpito.lisaaTapahtuma("otettiin varastosta "+t);
+    public void otaVarastosta(Tuote t) {
+        saldot.put(t, saldo(t.getId()) - 1);
+        kirjanpito.lisaaTapahtuma("otettiin varastosta " + t);
     }
 
     @Override
-        public void palautaVarastoon(Tuote t){
-        saldot.put(t,  saldo(t.getId())+1 );
-        kirjanpito.lisaaTapahtuma("palautettiin varastoon "+t);
+    public void palautaVarastoon(Tuote t) {
+        saldot.put(t, saldo(t.getId()) + 1);
+        kirjanpito.lisaaTapahtuma("palautettiin varastoon " + t);
     }
 
     private void alustaTuotteet() {
